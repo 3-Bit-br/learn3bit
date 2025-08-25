@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn3Bit - Aprendizado Gamificado</title>
+  <meta name="description" content="Learn3Bit é uma plataforma de aprendizado rápido em estilo retrô pixel art. Explore quizzes interativos sobre logística portuária e muito mais. 🚀🎮">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #00ff99;
+      color: #000;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 1px 1px #111;
+    }
+    main {
+      padding: 40px 20px;
+    }
+    h1 {
+      color: #00ff99;
+      font-size: 32px;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    a.button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 25px;
+      font-size: 18px;
+      background: #00ff99;
+      color: #000;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    a.button:hover {
+      background: #fff;
+      color: #000;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 15px;
+      font-size: 14px;
+      background: #111;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    🌟 Learn3Bit 🌟
+  </header>
+
+  <main>
+    <h1>Bem-vindo ao Learn3Bit</h1>
+    <p>
+      O Learn3Bit é uma plataforma de aprendizado gamificado em estilo retrô pixel art. 
+      Aqui você encontra quizzes interativos para testar seus conhecimentos em 
+      <b>logística portuária internacional</b> e muito mais!
+    </p>
+    <p>
+      Nosso primeiro módulo é o <b>LearnPorto</b> ⚓🚢 — preparado para jogar?
+    </p>
+
+    <a href="quiz.html" class="button">▶ Jogar o LearnPorto</a>
+  </main>
+
+  <footer>
+    © 2025 Learn3Bit - Todos os direitos reservados
+  </footer>
+</body>
+</html>
