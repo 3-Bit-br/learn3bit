@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Learn3Bit - Versão 9</title>
+  <style>
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background: #1e1e2f;
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+      transition: background 0.8s ease-in-out;
+    }
+    h1 { 
+      color: #00ff99; 
+      text-shadow: 2px 2px #000; 
+      padding: 10px;
+      border: 3px solid #00ff99;  /* Moldura no título */
+      display: inline-block;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.2); /* leve fundo transparente */
+    }
+    .overlay {
+      background: transparent; /* sem fundo preto */
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    .question { 
+      margin: 20px 0; 
+      font-size: 14px; 
+      padding: 15px;
+      border: 2px dashed #ffcc00;  /* moldura retro estilo pontilhado */
+      border-radius: 8px;
+      background: rgba(0,0,0,0.25); /* leve sombra atrás */
+    }
+    button {
+      display: block;
+      margin: 8px auto;
+      padding: 10px 20px;
+      font-family: inherit;
+      background: #333;
+      color: #fff;
+      border: 2px solid #00ff99;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover { background: #00ff99; color: #000; }
+    #feedback { 
+      margin-top: 20px; 
+      font-size: 14px; 
+      padding: 10px;
+      border: 2px solid #ffcc00;
+      display: inline-block;
+      background: rgba(0,0,0,0.25);
+    }
+    #timer { 
+      font-size: 12px; 
+      color: #ffcc00;
+      padding: 5px;
+      border: 2px solid #ffcc00;
+      display: inline-block;
+      background: rgba(0,0,0,0.25);
+    }
+    .correct { color: #00ff99; }
+    .wrong { color: #ff4444; }
+    #final { 
+      font-size: 16px; 
+      color: #ffcc00; 
+      margin-top: 30px; 
+      padding: 10px;
+      border: 3px double #00ff99;
+      display: inline-block;
+      background: rgba(0,0,0,0.25);
+    }
+    #nextBtn {
+      margin-top: 15px;
+      font-size: 12px;
+      border: 2px solid #ffcc00;
+    }
+    #nextBtn:hover { background: #ffcc00; color: #000; }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1>Quiz Learn3Bit - Documentação Portuária</h1>
+
+    <!-- Tela inicial -->
+    <div id="intro">
+      <p id="motivation"></p>
+      <button onclick="startGame()">▶ PLAY</button>
+    </div>
+
+    <!-- Só aparece depois do PLAY -->
+    <p id="timer" style="display:none;">⏱ Tempo: 0s</p>
+    <div id="quiz"></div>
+    <p id="feedback"></p>
+    <p id="final"></p>
+  </div>
+
+  <!-- Sons retrô -->
+  <audio id="soundCorrect" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="soundWrong" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+
+  <script>
+    let seconds = 0;
+    let score = 0;
+    let current = 0;
+    let timer;
+
+    // Frases motivacionais
+    const frases = [
+      "🌟 Você está pronto para o desafio? 🌟",
+      "🚀 Conhecimento é o seu melhor container.",
+      "⚓ Todo grande porto começou com um primeiro embarque."
+    ];
+    document.getElementById("motivation").innerHTML = frases[Math.floor(Math.random() * frases.length)];
+
+    // Perguntas sobre Documentação Portuária
+    const questions = [
+      {
+        q: "Qual é a função principal do Bill of Lading?",
+        answers: [
+          {text:"Determinar taxas portuárias", correct:false},
+          {text:"Autorizar entrada de navios", correct:false},
+          {text:"Servir como recibo, contrato e título de propriedade da carga", correct:true},
+          {text:"Calcular peso bruto da carga", correct:false}
+        ],
+        explanation: "O Bill of Lading é recibo oficial da carga, contrato de transporte e título de propriedade.",
+        bg: "https://i.ibb.co/C5scpSy8/Chat-GPT-Image-23-de-ago-de-2025-13-52-00.png"
+      },
+      {
+        q: "O Manifesto de Carga é usado principalmente para:",
+        answers: [
+          {text:"Controle interno da exportadora", correct:false},
+          {text:"Informar às autoridades a lista geral de mercadorias do navio", correct:true},
+          {text:"Emitir nota fiscal internacional", correct:false},
+          {text:"Substituir o Packing List", correct:false}
+        ],
+        explanation: "O Manifesto de Carga lista todas as mercadorias do navio e é obrigatório para autoridades portuárias.",
+        bg: "https://i.ibb.co/C5scpSy8/Chat-GPT-Image-23-de-ago-de-2025-13-52-00.png"
+      },
+      {
+        q: "Qual documento lista peso, volume e dimensões de cada item transportado?",
+        answers: [
+          {text:"Certificado de Origem", correct:false},
+          {text:"Packing List (Romaneio de Carga)", correct:true},
+          {text:"Invoice Comercial", correct:false},
+          {text:"Bill of Lading", correct:false}
+        ],
+        explanation: "O Packing List detalha volume, peso e dimensões para conferência da carga.",
+        bg: "https://i.ibb.co/C5scpSy8/Chat-GPT-Image-23-de-ago-de-2025-13-52-00.png"
+      },
+      {
+        q: "Por que o Certificado de Origem é importante?",
+        answers: [
+          {text:"Define o Incoterm da operação", correct:false},
+          {text:"Garante benefícios tarifários em acordos internacionais", correct:true},
+          {text:"Substitui o Bill of Lading", correct:false},
+          {text:"Indica o valor do frete", correct:false}
+        ],
+        explanation: "O Certificado de Origem comprova onde a mercadoria foi produzida e pode garantir benefícios fiscais.",
+        bg: "https://i.ibb.co/C5scpSy8/Chat-GPT-Image-23-de-ago-de-2025-13-52-00.png"
+      },
+      {
+        q: "A Invoice Comercial em uma exportação descreve:",
+        answers: [
+          {text:"Apenas os custos de transporte", correct:false},
+          {text:"Valores da mercadoria, condições de pagamento e negociação", correct:true},
+          {text:"Lista de todos os contêineres usados", correct:false},
+          {text:"A bandeira do navio", correct:false}
+        ],
+        explanation: "A Invoice Comercial é a fatura internacional com valores e condições da negociação.",
+        bg: "https://i.ibb.co/C5scpSy8/Chat-GPT-Image-23-de-ago-de-2025-13-52-00.png"
+      },
+      {
+        q: "O que os Incoterms determinam em uma negociação internacional?",
+        answers: [
+          {text:"Regulam impostos portuários", correct:false},
+          {text:"Definem responsabilidades de custos, frete, seguro e riscos", correct:true},
+          {text:"São usados apenas em transporte aéreo", correct:false},
+          {text:"Substituem Packing List e Bill of Lading", correct:false}
+        ],
+        explanation: "Os Incoterms definem quem paga frete, seguro e assume riscos na operação internacional.",
+        bg: "https://i.ibb.co/C5scpSy8/Chat-GPT-Image-23-de-ago-de-2025-13-52-00.png"
+      }
+    ];
+
+    function startGame() {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("timer").style.display = "block";
+
+      timer = setInterval(() => {
+        seconds++;
+        document.getElementById("timer").textContent = "⏱ Tempo: " + seconds + "s";
+      }, 1000);
+
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if(current >= questions.length) {
+        document.getElementById("quiz").innerHTML = "";
+        document.getElementById("feedback").innerHTML = "";
+        document.getElementById("final").innerHTML = 
+          "🏆 Fim do quiz!<br> Pontuação: " + score + "/" + questions.length + 
+          "<br> Tempo total: " + seconds + "s";
+        clearInterval(timer);
+        return;
+      }
+      
+      let q = questions[current];
+      if(q.bg.startsWith("#")) {
+        document.body.style.background = q.bg;
+      } else {
+        document.body.style.background = "url('" + q.bg + "') no-repeat center center fixed";
+        document.body.style.backgroundSize = "cover";
+      }
+
+      let html = "<div class='question'><p>" + q.q + "</p>";
+      q.answers.forEach((a) => {
+        html += "<button onclick='checkAnswer(" + a.correct + ", \"" + q.explanation + "\")'>" + a.text + "</button>";
+      });
+      html += "</div>";
+      document.getElementById("quiz").innerHTML = html;
+    }
+
+    function checkAnswer(correct, explanation) {
+      const feedback = document.getElementById("feedback");
+      if(correct) {
+        score++;
+        document.getElementById("soundCorrect").play();
+        feedback.innerHTML = "✔️ <span class='correct'>Acertou!</span><br>" + explanation;
+      } else {
+        document.getElementById("soundWrong").play();
+        feedback.innerHTML = "❌ <span class='wrong'>Errou!</span><br>" + explanation;
+      }
+      feedback.innerHTML += "<br><button id='nextBtn' onclick='nextQuestion()'>➡ Próxima</button>";
+    }
+
+    function nextQuestion() {
+      document.getElementById("feedback").innerHTML = "";
+      current++;
+      showQuestion();
+    }
+  </script>
+</body>
+</html>
